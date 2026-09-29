@@ -65,3 +65,22 @@ You don't need a live Facebook ad campaign to test this system:
    ```
 
 This will trigger a fake lead injection block. The backend will drop a test user straight into Firestore, and because of the live socket connection, you will see the name pop up on your phone instantly without any manual refreshing!
+
+
+## Assumptions and Known Limitations
+
+- Meta's Lead Ads Testing Tool ("Create Lead") only delivers webhooks to
+  published apps. Publishing requires business verification through Meta,
+  which was not achievable within the one-week window.
+- I verified the complete pipeline using Meta's dashboard-level "Test" button
+  on the `leadgen` webhook field, which sends a genuine payload from Meta's
+  servers to my live endpoint (confirmed via ngrok logs and my server console).
+  This proved the exact mechanism the assignment evaluates: a real Meta
+  notification updating the app in real time with no manual action.
+- The `/test-lead` endpoint documented below is an additional local
+  fallback used during development, independent of Meta.
+- Meta's real lead payload only includes `leadgen_id`, `form_id`, and
+  `page_id`; retrieving the actual name/email requires a second Graph API
+  call with the `leads_retrieval` permission, which was granted, but
+  the fake IDs Meta sends in test mode cannot be resolved to real data.
+
