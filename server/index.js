@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require ("express");
 const { initializeApp, cert } = require("firebase-admin/app");
 const { getFirestore } = require("firebase-admin/firestore");
@@ -11,10 +12,11 @@ const db = getFirestore();
 
 console.log("firebase admin initialized successfully");
 const app = express();
-app.use(express.json());
+app.use(express.json()); //MIddle man
 
-const MY_SECRET_TOKEN = "myassignmentsecret123";
+const MY_SECRET_TOKEN = process.env.MY_SECRET_TOKEN;
 
+//this was for checking this will be the initial handshake from our meta
 app.get("/test-lead", async (req,res)=>{
   try{
     const fakeLead = {
@@ -41,6 +43,7 @@ app.get("/test-lead", async (req,res)=>{
   }
 });
 
+//actual grabing and authentication
 app.get("/webhook",(req,res)=>{
   const mode = req.query['hub.mode'];
   const token = req.query['hub.verify_token'];
